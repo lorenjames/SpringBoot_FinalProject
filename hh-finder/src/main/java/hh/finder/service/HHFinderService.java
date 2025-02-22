@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import hh.finder.controller.model.LocationData;
+import hh.finder.controller.model.LocationData.FeatureData;
 import hh.finder.controller.model.LocationData.ReviewsData;
 import hh.finder.controller.model.LocationData.SpecialsData;
+import hh.finder.controller.model.LocationData.UserData;
 import hh.finder.dao.FeatureDao;
 import hh.finder.dao.LocationDao;
 import hh.finder.dao.ReviewDao;
@@ -43,12 +45,25 @@ public class HHFinderService {
 
 		return new LocationData(dbLocation);
 	}
+	
+	@Transactional(readOnly = false)
+	public UserData saveUser(UserData userData) {
+		User user = userData.toUser();
+		User dbUser = userDao.save(user);
+		
+		return new UserData(dbUser);
+	}
 
 	@Transactional(readOnly = true)
 	public List<LocationData> retrieveAllocations() {
 		return locationDao.findAll().stream()
 				.sorted((loc1, loc2) -> loc1.getBusinessName().compareTo(loc2.getBusinessName())).map(LocationData::new)
 				.toList();
+	}
+	
+	@Transactional(readOnly = true)
+	public List<FeatureData> retrieveAllFeatures() {
+		return featureDao.findAll().stream().map(FeatureData::new).toList();
 	}
 
 	@Transactional(readOnly = true)
@@ -165,5 +180,9 @@ public class HHFinderService {
 		return reviewDao.findById(reviewId)
 				.orElseThrow(() -> new NoSuchElementException("Review with ID=" + reviewId + " was not found."));
 	}
+
+	
+
+	
 
 }

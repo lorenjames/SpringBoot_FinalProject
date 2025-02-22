@@ -155,6 +155,36 @@ public class LocationData {
 
 	@Data
 	@NoArgsConstructor
+	public static class UserData {
+		private String firstName;
+		private String lastName;
+		private String email;
+		private String phone;
+		private String birthday;
+
+		public UserData(User user) {
+			this.firstName = user.getFirstName();
+			this.lastName = user.getLastName();
+			this.email = user.getEmail();
+			this.phone = user.getPhone();
+			this.birthday = user.getBirthday();
+		}
+
+		public User toUser() {
+			User users = new User();
+
+			users.setFirstName(firstName);
+			users.setLastName(lastName);
+			users.setEmail(email);
+			users.setPhone(phone);
+			users.setBirthday(birthday);
+
+			return users;
+		}
+	}
+
+	@Data
+	@NoArgsConstructor
 	public static class SpecialsData {
 		private Long specialsId;
 		private String special;

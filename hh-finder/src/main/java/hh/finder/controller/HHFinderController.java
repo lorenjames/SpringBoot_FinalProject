@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import hh.finder.controller.model.LocationData;
+import hh.finder.controller.model.LocationData.FeatureData;
 import hh.finder.controller.model.LocationData.ReviewsData;
+import hh.finder.controller.model.LocationData.UserData;
 import hh.finder.service.HHFinderService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,11 +37,24 @@ public class HHFinderController {
 		log.info("Creating new Business Location{}", locationData);
 		return hhFinderService.saveLocation(locationData);
 	}
+	
+	@PostMapping("/user")
+	@ResponseStatus(code = HttpStatus.CREATED)
+	public UserData createUser(@RequestBody UserData userData) {
+		log.info("Creating new user{}", userData);
+		return hhFinderService.saveUser(userData);
+	}
 
 	@GetMapping("/location")
 	public List<LocationData> retrieveAllHHLocations() {
 		log.info("Retrieving all Business Locations.");
 		return hhFinderService.retrieveAllocations();
+	}
+	
+	@GetMapping("/features")
+	public List<FeatureData> retrieveALLHHFeatures(){
+		log.info("Retrieving complete feature list");
+		return hhFinderService.retrieveAllFeatures();
 	}
 
 	@GetMapping("/location/{locationId}")
@@ -78,6 +93,7 @@ public class HHFinderController {
 	}
 
 	@PostMapping("/locations/{locationId}/reviews")
+	@ResponseStatus(code = HttpStatus.CREATED)
 	public ReviewsData addReviewToLocation(@PathVariable Long locationId, @RequestBody ReviewsData reviewData) {
 
 		if (reviewData.getUserId() == null) {
